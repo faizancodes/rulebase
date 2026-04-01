@@ -11,6 +11,7 @@ export default async function TimelinePage() {
     const timeline = Array.isArray(timelineResponse.data) ? timelineResponse.data : [];
     const velocity = Array.isArray(velocityResponse.data) ? velocityResponse.data : [];
 
+
     if (timeline.length === 0 && velocity.length === 0) {
       return <EmptyState title="No timeline activity" description="Try broadening the monitored agencies, issuers, or keywords." />;
     }

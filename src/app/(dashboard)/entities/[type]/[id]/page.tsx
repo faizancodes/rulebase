@@ -21,9 +21,9 @@ export default async function EntityPage({ params }: EntityPageProps) {
 
   const record = recordResponse.data;
   const summary = summaryResponse.data;
-  const timeline = timelineResponse.data;
+  const timeline = Array.isArray(timelineResponse.data) ? timelineResponse.data : [];
 
-  if (!record || !summary || !Array.isArray(timeline)) {
+  if (!record || !summary) {
     notFound();
   }
 
