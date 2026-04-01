@@ -3,6 +3,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { fetchEntityTimeline, fetchDashboardVelocity } from "@/lib/api";
 
+export const dynamic = "force-dynamic";
+
 export default async function TimelinePage() {
   try {
     const [timelineResponse, velocityResponse] = await Promise.all([fetchEntityTimeline("agency", "all"), fetchDashboardVelocity()]);

@@ -6,6 +6,8 @@ import { EntityRelatedItems } from "@/components/entities/entity-related-items";
 import { EntitySummary } from "@/components/entities/entity-summary";
 import { fetchEntityRecord, fetchEntitySummary, fetchEntityTimeline } from "@/lib/api";
 
+export const dynamic = "force-dynamic";
+
 interface EntityPageProps {
   params: Promise<{ type: string; id: string }>;
 }
