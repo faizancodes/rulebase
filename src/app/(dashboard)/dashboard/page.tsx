@@ -1,11 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { Sidebar } from "@/components/layout/sidebar";
-import { Topbar } from "@/components/layout/topbar";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
