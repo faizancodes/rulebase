@@ -4,6 +4,8 @@ interface SearchState {
   query: string;
   setQuery: (query: string) => void;
   clearQuery: () => void;
+  selectedEntity: string | null;
+  setSelectedEntity: (entity: string | null) => void;
 }
 
 export const useSearchStore = create<SearchState>((set) => ({

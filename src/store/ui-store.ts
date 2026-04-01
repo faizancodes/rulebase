@@ -4,6 +4,8 @@ interface UiState {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
   toggleSidebar: () => void;
+  activeSource: "all" | "federal-register" | "congress" | "sec";
+  setActiveSource: (source: UiState["activeSource"]) => void;
 }
 
 export const useUiStore = create<UiState>((set) => ({

@@ -176,3 +176,67 @@ export interface NavigationLink {
   href: string;
   description: string;
 }
+
+export interface DashboardSummaryStat {
+  label: string;
+  value: string;
+  delta: string;
+  tone: "positive" | "neutral" | "warning";
+}
+
+export interface DashboardVelocityPoint {
+  label: string;
+  value: number;
+  date: string;
+  source: "federal-register" | "congress" | "sec";
+}
+
+export interface DashboardDependencyNode {
+  id: string;
+  type: "agency" | "committee" | "issuer" | "industry";
+  name: string;
+  count: number;
+  intensity: number;
+}
+
+export interface DashboardDependencyEdge {
+  source: string;
+  target: string;
+  weight: number;
+  label: string;
+}
+
+export interface DashboardDependencyGraph {
+  nodes: DashboardDependencyNode[];
+  edges: DashboardDependencyEdge[];
+}
+
+export interface DashboardComplianceDriver {
+  label: string;
+  value: number;
+  max: number;
+}
+
+export interface DashboardComplianceSummary {
+  score: number;
+  label: string;
+  explanation: string;
+  drivers: DashboardComplianceDriver[];
+}
+
+export interface DashboardCrossReferenceHighlight {
+  id: string;
+  sourceType: CrossReferenceRecord["sourceType"];
+  sourceLabel: string;
+  targetType: CrossReferenceRecord["targetType"];
+  targetLabel: string;
+  relevanceScore: number;
+  rationale: string;
+  matchedTerms: string[];
+}
+
+export interface DashboardWidgetResponse<T> {
+  data: T;
+  _fallback?: boolean;
+  meta?: ApiResponseMeta;
+}
