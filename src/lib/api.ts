@@ -1,8 +1,13 @@
 import type {
   ApiResponse,
   CongressBill,
+  CongressBillDetail,
+  CrossReferenceInsight,
+  FederalRegisterDocument,
   FederalRegisterNotice,
+  SecCompanyProfile,
   SecFiling,
+  SimilarityResult,
 } from "@/lib/types";
 
 export async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {

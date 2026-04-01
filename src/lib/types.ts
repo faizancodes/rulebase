@@ -100,6 +100,71 @@ export interface ComplianceImpactScore {
 export interface ApiResponse<T> {
   data: T;
   _fallback?: boolean;
+  meta?: ApiResponseMeta;
+}
+
+export interface ApiResponseMeta {
+  source?: string;
+  query?: string;
+  total?: number;
+  page?: number;
+  pageSize?: number;
+  nextPage?: number | null;
+  cached?: boolean;
+  rateLimited?: boolean;
+}
+
+export interface SearchParams {
+  q?: string;
+  page?: number;
+  pageSize?: number;
+  sort?: string;
+  filter?: string;
+}
+
+export interface FederalRegisterDocument extends FederalRegisterNotice {
+  documentType: string;
+  agencies: string[];
+  effectiveDate: string;
+  htmlUrl: string;
+}
+
+export interface CongressBillDetail extends CongressBill {
+  congress: number;
+  status: string;
+  actions: string[];
+  subjects: string[];
+}
+
+export interface SecCompanyProfile {
+  cik: string;
+  companyName: string;
+  ticker: string;
+  sic: string;
+  industry: string;
+  filings: SecFiling[];
+}
+
+export interface CrossReferenceInsight {
+  id: string;
+  sourceType: CrossReferenceRecord["sourceType"];
+  sourceId: string;
+  targetType: CrossReferenceRecord["targetType"];
+  targetId: string;
+  targetName: string;
+  relevanceScore: number;
+  rationale: string;
+  matchedTerms: string[];
+  impact: string;
+}
+
+export interface SimilarityResult {
+  id: string;
+  label: string;
+  type: string;
+  score: number;
+  summary: string;
+  url: string;
 }
 
 export interface FetchJsonOptions extends RequestInit {
