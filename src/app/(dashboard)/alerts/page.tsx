@@ -10,7 +10,6 @@ import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
-import { useAlertStore } from "@/store/alert-store";
 import type { AlertItem, AlertRule } from "@/lib/types";
 
 const seedRules: AlertRule[] = [
@@ -26,21 +25,42 @@ const seedAlerts: AlertItem[] = [
 ];
 
 export default function AlertsPage() {
-  const { rules, alerts, unreadCount, isLoading, setRules, setAlerts, addRule, toggleRule, removeRule, markAlertRead, markAllRead, setLoading } = useAlertStore();
+  const [rules, setRules] = useState<AlertRule[]>(seedRules);
+  const [alerts, setAlerts] = useState<AlertItem[]>(seedAlerts);
   const [error, setError] = useState<string | null>(null);
 
+  const unreadCount = useMemo(() => alerts.filter((alert) => !alert.read).length, [alerts]);
+  const isLoading = false;
+
+  const addRule = useCallback((rule: AlertRule) => {
+    setRules((current) => [rule, ...current]);
+  }, []);
+
+  const toggleRule = useCallback((id: string) => {
+    setRules((current) => current.map((rule) => (rule.id === id ? { ...rule, isActive: !rule.isActive } : rule)));
+  }, []);
+
+  const removeRule = useCallback((id: string) => {
+    setRules((current) => current.filter((rule) => rule.id !== id));
+  }, []);
+
+  const markAlertRead = useCallback((id: string) => {
+    setAlerts((current) => current.map((alert) => (alert.id === id ? { ...alert, read: true } : alert)));
+  }, []);
+
+  const markAllRead = useCallback(() => {
+    setAlerts((current) => current.map((alert) => ({ ...alert, read: true })));
+  }, []);
+
   const loadSeedData = useCallback(() => {
-    setLoading(true);
     setError(null);
     try {
       setRules(seedRules);
       setAlerts(seedAlerts);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load alerts");
-    } finally {
-      setLoading(false);
     }
-  }, [setAlerts, setLoading, setRules]);
+  }, []);
 
   const handleRetry = useCallback(() => {
     loadSeedData();
@@ -49,7 +69,7 @@ export default function AlertsPage() {
   const activeRules = useMemo(() => rules.filter((rule) => rule.isActive), [rules]);
 
   if (isLoading) return <LoadingState />;
-  if (error) return <ErrorState message={error} onRetry={handleRetry} />;
+  if (error) return <ErrorState message={error} onRetry={loadSeedData} />;
   if (rules.length === 0 && alerts.length === 0) {
     return <EmptyState title="No alerts yet" description="Create a monitoring rule to start tracking federal signals." />;
   }

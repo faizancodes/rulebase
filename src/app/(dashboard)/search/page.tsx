@@ -6,45 +6,59 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
-import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { SearchFilters } from "@/components/search/search-filters";
 import { SearchResults } from "@/components/search/search-results";
 import { fetchCongressBills, fetchFederalRegisterNotices, fetchSecFilings } from "@/lib/api";
+import type { SearchParams, SearchResultItem } from "@/lib/types";
 
 export default function SearchPage() {
-  const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState(query);
-  const [source, setSource] = useState<"all" | "notices" | "bills" | "filings">("all");
+  const [filters, setFilters] = useState<SearchParams>({});
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedQuery(query), 300);
+    const timer = setTimeout(() => setDebouncedQuery(filters.q ?? ""), 300);
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [filters.q]);
 
   const noticesQuery = useQuery({
     queryKey: ["search", "notices", debouncedQuery],
     queryFn: () => fetchFederalRegisterNotices(debouncedQuery),
-    enabled: source === "all" || source === "notices",
   });
   const billsQuery = useQuery({
     queryKey: ["search", "bills", debouncedQuery],
     queryFn: () => fetchCongressBills(debouncedQuery),
-    enabled: source === "all" || source === "bills",
   });
   const filingsQuery = useQuery({
     queryKey: ["search", "filings", debouncedQuery],
     queryFn: () => fetchSecFilings(debouncedQuery),
-    enabled: source === "all" || source === "filings",
   });
 
-  const results = useMemo(() => {
-    const notices = Array.isArray(noticesQuery.data?.data) ? noticesQuery.data.data : [];
-    const bills = Array.isArray(billsQuery.data?.data) ? billsQuery.data.data : [];
-    const filings = Array.isArray(filingsQuery.data?.data) ? filingsQuery.data.data : [];
-    return { notices, bills, filings };
+  const results = useMemo<SearchResultItem[]>(() => {
+    const notices = (noticesQuery.data?.data ?? []).map((item) => ({
+      id: item.documentNumber,
+      title: item.title,
+      subtitle: item.agency,
+      source: "Federal Register",
+      date: item.publicationDate,
+    }));
+    const bills = (billsQuery.data?.data ?? []).map((item) => ({
+      id: item.billId,
+      title: item.title,
+      subtitle: item.sponsor,
+      source: "Congress",
+      date: item.introducedDate,
+    }));
+    const filings = (filingsQuery.data?.data ?? []).map((item) => ({
+      id: item.accessionNumber,
+      title: item.companyName,
+      subtitle: item.formType,
+      source: "SEC",
+      date: item.filingDate,
+    }));
+    return [...notices, ...bills, ...filings];
   }, [billsQuery.data?.data, filingsQuery.data?.data, noticesQuery.data?.data]);
 
   const isLoading = noticesQuery.isLoading || billsQuery.isLoading || filingsQuery.isLoading;
@@ -63,26 +77,27 @@ export default function SearchPage() {
           <p className="mt-2 max-w-3xl text-sm text-text-secondary">Search Federal Register notices, congressional bills, and SEC filings from one place.</p>
         </div>
 
-        <SearchFilters query={query} onQueryChange={setQuery} source={source} onSourceChange={setSource} />
+        <SearchFilters
+          filters={filters}
+          onChange={(next) => setFilters((current) => ({ ...current, ...next }))}
+          onReset={() => setFilters({})}
+        />
 
         {isLoading ? (
           <LoadingState />
         ) : error ? (
           <ErrorState message={error} />
-        ) : results.notices.length === 0 && results.bills.length === 0 && results.filings.length === 0 ? (
+        ) : results.length === 0 ? (
           <EmptyState title="No results" description="Try a broader search term or switch sources." />
         ) : (
-          <div className="grid gap-6">
-            <Card>
-              <SearchResults title="Federal Register notices" items={results.notices} />
-            </Card>
-            <Card>
-              <SearchResults title="Congressional bills" items={results.bills} />
-            </Card>
-            <Card>
-              <SearchResults title="SEC filings" items={results.filings} />
-            </Card>
-          </div>
+          <SearchResults
+            items={results}
+            sorting={[]}
+            onSortingChange={() => undefined}
+            selectedIds={[]}
+            onToggleSelect={() => undefined}
+            onCompare={() => undefined}
+          />
         )}
           </div>
         </main>

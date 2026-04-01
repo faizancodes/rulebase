@@ -18,21 +18,19 @@ import { CrossReferenceCard } from "@/components/insights/cross-reference-card";
 import { ComplianceScoreCard } from "@/components/insights/compliance-score-card";
 import { fetchDashboardCompliance, fetchDashboardCrossReferences, fetchDashboardDependencies, fetchDashboardSummary, fetchDashboardVelocity, fetchCongressBills, fetchFederalRegisterNotices, fetchSecFilings } from "@/lib/api";
 import { formatDate } from "@/lib/formatters";
-import { useSearchStore } from "@/store/search-store";
-import { useUiStore } from "@/store/ui-store";
 
 export default function DashboardPage() {
-  const activeSource = useUiStore((state) => state.activeSource);
-  const selectedEntity = useSearchStore((state) => state.selectedEntity);
+  const activeSource = "all";
+  const selectedEntity = "";
 
   const summaryQuery = useQuery({ queryKey: ["dashboard", "summary"], queryFn: fetchDashboardSummary });
   const velocityQuery = useQuery({ queryKey: ["dashboard", "velocity"], queryFn: fetchDashboardVelocity });
   const dependencyQuery = useQuery({ queryKey: ["dashboard", "dependencies"], queryFn: fetchDashboardDependencies });
   const complianceQuery = useQuery({ queryKey: ["dashboard", "compliance"], queryFn: fetchDashboardCompliance });
   const crossReferenceQuery = useQuery({ queryKey: ["dashboard", "cross-references"], queryFn: fetchDashboardCrossReferences });
-  const noticesQuery = useQuery({ queryKey: ["dashboard", "notices", activeSource, selectedEntity], queryFn: () => fetchFederalRegisterNotices(selectedEntity ?? "") });
-  const billsQuery = useQuery({ queryKey: ["dashboard", "bills", activeSource, selectedEntity], queryFn: () => fetchCongressBills(selectedEntity ?? "") });
-  const filingsQuery = useQuery({ queryKey: ["dashboard", "filings", activeSource, selectedEntity], queryFn: () => fetchSecFilings(selectedEntity ?? "") });
+  const noticesQuery = useQuery({ queryKey: ["dashboard", "notices", activeSource, selectedEntity], queryFn: () => fetchFederalRegisterNotices(selectedEntity) });
+  const billsQuery = useQuery({ queryKey: ["dashboard", "bills", activeSource, selectedEntity], queryFn: () => fetchCongressBills(selectedEntity) });
+  const filingsQuery = useQuery({ queryKey: ["dashboard", "filings", activeSource, selectedEntity], queryFn: () => fetchSecFilings(selectedEntity) });
 
   const summary = Array.isArray(summaryQuery.data?.data) ? summaryQuery.data.data : [];
   const notices = Array.isArray(noticesQuery.data?.data) ? noticesQuery.data.data : [];
