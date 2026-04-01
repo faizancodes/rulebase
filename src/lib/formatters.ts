@@ -15,3 +15,10 @@ export function formatNumber(value: number): string {
 export function formatPercent(value: number): string {
   return `${value.toFixed(1)}%`;
 }
+
+export function formatDateRange(start?: string, end?: string): string {
+  if (!start && !end) return "Any time";
+  if (start && end) return `${formatDate(start)} – ${formatDate(end)}`;
+  if (start) return `From ${formatDate(start)}`;
+  return `Until ${formatDate(end ?? "")}`;
+}

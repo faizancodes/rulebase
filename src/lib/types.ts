@@ -120,6 +120,13 @@ export interface SearchParams {
   pageSize?: number;
   sort?: string;
   filter?: string;
+  agency?: string;
+  committee?: string;
+  issuer?: string;
+  topic?: string;
+  filingType?: string;
+  dateFrom?: string;
+  dateTo?: string;
 }
 
 export interface FederalRegisterDocument extends FederalRegisterNotice {
@@ -175,6 +182,30 @@ export interface NavigationLink {
   label: string;
   href: string;
   description: string;
+}
+
+export interface SearchResultItem {
+  id: string;
+  source: "federal-register" | "congress" | "sec";
+  title: string;
+  subtitle: string;
+  summary: string;
+  date: string;
+  url: string;
+  agency?: string;
+  committee?: string;
+  issuer?: string;
+  topic?: string;
+  filingType?: string;
+  tags: string[];
+}
+
+export interface SavedSearch {
+  id: string;
+  name: string;
+  query: string;
+  filters: SearchParams;
+  createdAt: string;
 }
 
 export interface DashboardSummaryStat {
