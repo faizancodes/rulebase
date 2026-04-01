@@ -4,7 +4,8 @@ import { useMemo } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { AppShell } from "@/components/layout/app-shell";
+import { Sidebar } from "@/components/layout/sidebar";
+import { Topbar } from "@/components/layout/topbar";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -41,8 +42,12 @@ export default function DashboardPage() {
   const recentDate = useMemo(() => formatDate(new Date().toISOString()), []);
 
   return (
-    <AppShell>
-      <div className="space-y-6">
+    <div className="min-h-screen bg-background text-text-primary lg:flex">
+      <Sidebar />
+      <div className="flex min-h-screen flex-1 flex-col">
+        <Topbar />
+        <main className="flex-1 p-4 sm:p-6 xl:p-8">
+          <div className="space-y-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.05em] text-text-muted">Dashboard</p>
@@ -96,7 +101,9 @@ export default function DashboardPage() {
             </div>
           </Card>
         </div>
+          </div>
+        </main>
       </div>
-    </AppShell>
+    </div>
   );
 }
