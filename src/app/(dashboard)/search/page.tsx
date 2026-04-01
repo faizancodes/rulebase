@@ -16,13 +16,25 @@ import { SearchResults } from "@/components/search/search-results";
 import { fetchCongressBills, fetchFederalRegisterNotices, fetchSecFilings } from "@/lib/api";
 import { formatDate } from "@/lib/formatters";
 import { searchIndex } from "@/lib/search-index";
-import type { SearchResultItem, SavedSearch } from "@/lib/types";
+import type { SearchParams, SearchResultItem, SavedSearch } from "@/lib/types";
 import { useCompareStore } from "@/store/compare-store";
 import { useSearchStore } from "@/store/search-store";
 import { useDebounce } from "@/hooks/use-debounce";
 
 function toSearchItems() {
   return [] as SearchResultItem[];
+}
+
+function filtersToSearchParams(filters: Record<string, string>): SearchParams {
+  return {
+    agency: filters.agency || undefined,
+    committee: filters.committee || undefined,
+    issuer: filters.issuer || undefined,
+    topic: filters.topic || undefined,
+    filingType: filters.filingType || undefined,
+    dateFrom: filters.dateFrom || undefined,
+    dateTo: filters.dateTo || undefined,
+  };
 }
 
 export default function SearchPage() {
@@ -41,9 +53,9 @@ export default function SearchPage() {
   const filingsQuery = useQuery({ queryKey: ["search", "filings", debouncedQuery, filters], queryFn: () => fetchSecFilings(debouncedQuery), enabled: debouncedQuery.length > 0 || Object.values(filters).some(Boolean) });
 
   const items = useMemo(() => {
-    const noticeItems = Array.isArray(noticesQuery.data?.data) ? noticesQuery.data.data.map((item) => ({ id: item.documentNumber, source: "federal-register" as const, title: item.title, subtitle: item.agency, summary: item.abstract, date: item.publicationDate, url: item.url, agency: item.agency, topic: item.topics[0], tags: item.topics })) : [];
-    const billItems = Array.isArray(billsQuery.data?.data) ? billsQuery.data.data.map((item) => ({ id: item.billId, source: "congress" as const, title: item.title, subtitle: item.chamber, summary: item.summary, date: item.introducedDate, url: item.url, committee: item.committees[0], topic: item.committees[0], tags: item.committees })) : [];
-    const filingItems = Array.isArray(filingsQuery.data?.data) ? filingsQuery.data.data.map((item) => ({ id: item.accessionNumber, source: "sec" as const, title: item.companyName, subtitle: item.formType, summary: item.description, date: item.filingDate, url: item.url, issuer: item.companyName, filingType: item.formType, topic: item.industry, tags: [...item.riskFlags, item.industry] })) : [];
+    const noticeItems = Array.isArray(noticesQuery.data?.data) ? noticesQuery.data.data.map((item) => ({ id: item.documentNumber, source: "federal-register" as const, title: item.title, subtitle: item.agency, summary: item.abstract, date: item.publicationDate, url: item.url, tags: item.topics })) : [];
+    const billItems = Array.isArray(billsQuery.data?.data) ? billsQuery.data.data.map((item) => ({ id: item.billId, source: "congress" as const, title: item.title, subtitle: item.chamber, summary: item.summary, date: item.introducedDate, url: item.url, tags: item.committees })) : [];
+    const filingItems = Array.isArray(filingsQuery.data?.data) ? filingsQuery.data.data.map((item) => ({ id: item.accessionNumber, source: "sec" as const, title: item.companyName, subtitle: item.formType, summary: item.description, date: item.filingDate, url: item.url, tags: [...item.riskFlags, item.industry] })) : [];
     return [...noticeItems, ...billItems, ...filingItems];
   }, [noticesQuery.data?.data, billsQuery.data?.data, filingsQuery.data?.data]);
 
@@ -51,7 +63,7 @@ export default function SearchPage() {
 
   const handleSaveSearch = useCallback(() => {
     if (!searchName.trim()) return;
-    const saved: SavedSearch = { id: crypto.randomUUID(), name: searchName.trim(), query, filters, createdAt: formatDate(new Date().toISOString()) };
+    const saved: SavedSearch = { id: crypto.randomUUID(), name: searchName.trim(), query, filters: filtersToSearchParams(filters), createdAt: formatDate(new Date().toISOString()) };
     saveSearch(saved);
     setSearchName("");
   }, [filters, query, saveSearch, searchName]);
