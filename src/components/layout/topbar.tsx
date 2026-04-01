@@ -3,8 +3,6 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
-import { useUiStore } from "@/store/ui-store";
 
 export function Topbar() {
   return (
