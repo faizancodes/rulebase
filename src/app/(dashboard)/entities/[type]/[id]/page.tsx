@@ -30,7 +30,7 @@ export default async function EntityPage({ params }: EntityPageProps) {
     <div className="space-y-6">
       <EntityHeader entity={record} />
       <EntitySummary summary={summary} />
-      <CrossSourceTimeline items={timeline} />
+      <CrossSourceTimeline items={timeline} velocity={[]} />
       <EntityRelatedItems items={timeline} />
     </div>
   );

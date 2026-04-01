@@ -25,15 +25,15 @@ function toSearchItems() {
   return [] as SearchResultItem[];
 }
 
-function filtersToSearchParams(filters: Record<string, string>): SearchParams {
+function filtersToSearchParams(filters: SearchParams): Record<string, string> {
   return {
-    agency: filters.agency || undefined,
-    committee: filters.committee || undefined,
-    issuer: filters.issuer || undefined,
-    topic: filters.topic || undefined,
-    filingType: filters.filingType || undefined,
-    dateFrom: filters.dateFrom || undefined,
-    dateTo: filters.dateTo || undefined,
+    agency: filters.agency ?? "",
+    committee: filters.committee ?? "",
+    issuer: filters.issuer ?? "",
+    topic: filters.topic ?? "",
+    filingType: filters.filingType ?? "",
+    dateFrom: filters.dateFrom ?? "",
+    dateTo: filters.dateTo ?? "",
   };
 }
 
