@@ -9,10 +9,8 @@ import { Topbar } from "@/components/layout/topbar";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
-import { SearchFilters } from "@/components/search/search-filters";
-import { SearchResults } from "@/components/search/search-results";
 import { fetchCongressBills, fetchFederalRegisterNotices, fetchSecFilings } from "@/lib/api";
-import type { SearchParams, SearchResultItem } from "@/lib/types";
+import type { SearchParams } from "@/lib/types";
 
 export default function SearchPage() {
   const [filters, setFilters] = useState<SearchParams>({});
@@ -36,7 +34,7 @@ export default function SearchPage() {
     queryFn: () => fetchSecFilings(debouncedQuery),
   });
 
-  const results = useMemo<SearchResultItem[]>(() => {
+  const results = useMemo(() => {
     const notices = (noticesQuery.data?.data ?? []).map((item) => ({
       id: item.documentNumber,
       title: item.title,
@@ -77,11 +75,12 @@ export default function SearchPage() {
           <p className="mt-2 max-w-3xl text-sm text-text-secondary">Search Federal Register notices, congressional bills, and SEC filings from one place.</p>
         </div>
 
-        <SearchFilters
-          filters={filters}
-          onChange={(next) => setFilters((current) => ({ ...current, ...next }))}
-          onReset={() => setFilters({})}
-        />
+        <div className="grid gap-4 rounded border border-border-default bg-surface-2 p-4 md:grid-cols-2 xl:grid-cols-4">
+          <input className="rounded border border-border-default bg-surface-1 px-3 py-2 text-sm" placeholder="Search terms" value={filters.q ?? ""} onChange={(e) => setFilters((current) => ({ ...current, q: e.target.value }))} />
+          <input className="rounded border border-border-default bg-surface-1 px-3 py-2 text-sm" placeholder="Agency" value={filters.agency ?? ""} onChange={(e) => setFilters((current) => ({ ...current, agency: e.target.value }))} />
+          <input className="rounded border border-border-default bg-surface-1 px-3 py-2 text-sm" placeholder="Committee" value={filters.committee ?? ""} onChange={(e) => setFilters((current) => ({ ...current, committee: e.target.value }))} />
+          <input className="rounded border border-border-default bg-surface-1 px-3 py-2 text-sm" placeholder="Issuer" value={filters.issuer ?? ""} onChange={(e) => setFilters((current) => ({ ...current, issuer: e.target.value }))} />
+        </div>
 
         {isLoading ? (
           <LoadingState />
@@ -90,14 +89,20 @@ export default function SearchPage() {
         ) : results.length === 0 ? (
           <EmptyState title="No results" description="Try a broader search term or switch sources." />
         ) : (
-          <SearchResults
-            items={results}
-            sorting={[]}
-            onSortingChange={() => undefined}
-            selectedIds={[]}
-            onToggleSelect={() => undefined}
-            onCompare={() => undefined}
-          />
+          <div className="space-y-3">
+            {results.map((item) => (
+              <div key={item.id} className="rounded border border-border-default bg-surface-2 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <p className="text-sm text-text-primary">{item.title}</p>
+                    <p className="text-xs text-text-muted">{item.subtitle}</p>
+                  </div>
+                  <span className="text-xs uppercase tracking-[0.2em] text-text-muted">{item.source}</span>
+                </div>
+                <p className="mt-2 text-xs text-text-secondary">{item.date}</p>
+              </div>
+            ))}
+          </div>
         )}
           </div>
         </main>

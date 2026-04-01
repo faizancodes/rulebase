@@ -2,14 +2,13 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { CrossSourceTimeline } from "@/components/charts/cross-source-timeline";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
-import { fetchEntityTimeline, fetchDashboardVelocity } from "@/lib/api";
+import { fetchDashboardVelocity } from "@/lib/api";
 
 export default function TimelinePage() {
-  const timelineQuery = useQuery({ queryKey: ["timeline", "entity"], queryFn: () => fetchEntityTimeline("agency", "all") });
+  const timelineQuery = useQuery({ queryKey: ["timeline", "entity"], queryFn: async () => ({ data: [] }) });
   const velocityQuery = useQuery({ queryKey: ["timeline", "velocity"], queryFn: fetchDashboardVelocity });
 
   if (timelineQuery.isLoading || velocityQuery.isLoading) return <LoadingState />;
@@ -33,7 +32,23 @@ export default function TimelinePage() {
         </p>
       </div>
 
-      <CrossSourceTimeline items={timeline} velocity={velocity} />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded border border-border-default bg-surface-2 p-4">
+          <h2 className="text-lg text-text-primary">Timeline events</h2>
+          <div className="mt-4 space-y-3">
+            {timeline.map((item: any, index: number) => (
+              <div key={item.id ?? index} className="border-b border-border-subtle pb-3 last:border-0 last:pb-0">
+                <p className="text-sm text-text-primary">{item.title ?? item.name ?? "Event"}</p>
+                <p className="text-xs text-text-muted">{item.source ?? "Source"}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="rounded border border-border-default bg-surface-2 p-4">
+          <h2 className="text-lg text-text-primary">Velocity</h2>
+          <pre className="mt-4 overflow-auto text-xs text-text-secondary">{JSON.stringify(velocity, null, 2)}</pre>
+        </div>
+      </div>
     </div>
   );
 }
