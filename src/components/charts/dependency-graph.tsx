@@ -37,13 +37,13 @@ export function DependencyGraph({ data, isLoading, error, onRetry }: DependencyG
               <div key={node.id} className="border border-border-default bg-surface-1 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm text-text-primary">{node.name}</p>
+                    <p className="text-sm text-text-primary">{node.label}</p>
                     <p className="text-xs uppercase tracking-[0.05em] text-text-muted">{node.type}</p>
                   </div>
-                  <Badge>{node.count} links</Badge>
+                  <Badge>{node.weight} weight</Badge>
                 </div>
                 <div className="mt-3 h-2 bg-surface-3">
-                  <div className="h-2 bg-accent-primary" style={{ width: `${Math.max(node.intensity, 10)}%` }} />
+                  <div className="h-2 bg-accent-primary" style={{ width: `${Math.max(node.weight, 10)}%` }} />
                 </div>
               </div>
             ))}

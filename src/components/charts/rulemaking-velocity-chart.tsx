@@ -18,7 +18,7 @@ interface RulemakingVelocityChartProps {
 
 export function RulemakingVelocityChart({ data, isLoading, error, onRetry }: RulemakingVelocityChartProps) {
   const points = useMemo(() => (Array.isArray(data) ? data : []), [data]);
-  const maxValue = useMemo(() => Math.max(...points.map((point) => point.value), 1), [points]);
+  const maxValue = useMemo(() => Math.max(...points.flatMap((point) => [point.federalRegister, point.congress, point.sec]), 1), [points]);
 
   if (isLoading) return <LoadingState />;
   if (error) return <ErrorState message={error} onRetry={onRetry} />;
@@ -33,15 +33,16 @@ export function RulemakingVelocityChart({ data, isLoading, error, onRetry }: Rul
         </div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {points.slice(-8).map((point) => (
-            <div key={`${point.source}-${point.date}`} className="border border-border-default bg-surface-1 p-3">
-              <div className="flex items-center justify-between gap-3 text-xs uppercase tracking-[0.05em] text-text-muted">
-                <span>{point.label}</span>
-                <span>{point.source}</span>
+            <div key={point.date} className="border border-border-default bg-surface-1 p-3">
+              <div className="text-xs uppercase tracking-[0.05em] text-text-muted">{point.date}</div>
+              <div className="mt-3 space-y-2 text-sm text-text-secondary">
+                <div className="flex items-center justify-between"><span>Federal Register</span><span>{formatNumber(point.federalRegister)}</span></div>
+                <div className="h-2 bg-surface-3"><div className="h-2 bg-accent-primary" style={{ width: `${Math.max((point.federalRegister / maxValue) * 100, 8)}%` }} /></div>
+                <div className="flex items-center justify-between"><span>Congress</span><span>{formatNumber(point.congress)}</span></div>
+                <div className="h-2 bg-surface-3"><div className="h-2 bg-accent-primary/80" style={{ width: `${Math.max((point.congress / maxValue) * 100, 8)}%` }} /></div>
+                <div className="flex items-center justify-between"><span>SEC</span><span>{formatNumber(point.sec)}</span></div>
+                <div className="h-2 bg-surface-3"><div className="h-2 bg-accent-primary/60" style={{ width: `${Math.max((point.sec / maxValue) * 100, 8)}%` }} /></div>
               </div>
-              <div className="mt-3 h-2 bg-surface-3">
-                <div className="h-2 bg-accent-primary" style={{ width: `${Math.max((point.value / maxValue) * 100, 8)}%` }} />
-              </div>
-              <p className="mt-2 text-sm text-text-primary">{formatNumber(point.value)} actions</p>
             </div>
           ))}
         </div>

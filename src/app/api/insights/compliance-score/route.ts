@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 import type { ComplianceImpactScore } from "@/lib/types";
 
@@ -8,7 +7,11 @@ import { SearchQuerySchema, jsonOk, normalizeQuery } from "../../_utils";
 const SeedScore: ComplianceImpactScore = {
   score: 87,
   label: "High",
-  drivers: ["Disclosure overlap", "Comment-letter activity", "Issuer exposure"],
+  drivers: [
+    { label: "Disclosure overlap", value: 9, max: 10 },
+    { label: "Comment-letter activity", value: 8, max: 10 },
+    { label: "Issuer exposure", value: 7, max: 10 },
+  ],
   explanation: "The proposal is likely to affect public-company disclosures and near-term compliance workflows.",
 };
 

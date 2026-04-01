@@ -1,9 +1,10 @@
-import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface TabsProps {
-  children: ReactNode;
+  className?: string;
+  children: React.ReactNode;
 }
 
-export function Tabs({ children }: TabsProps) {
-  return <div className="border-b border-border-default">{children}</div>;
+export function Tabs({ className, children }: TabsProps) {
+  return <div className={cn("w-full", className)}>{children}</div>;
 }

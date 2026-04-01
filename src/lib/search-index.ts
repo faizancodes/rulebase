@@ -9,11 +9,6 @@ export function createSearchIndex(items: SearchResultItem[]) {
     this.addField("subtitle");
     this.addField("summary");
     this.addField("tags");
-    this.addField("agency");
-    this.addField("committee");
-    this.addField("issuer");
-    this.addField("topic");
-    this.addField("filingType");
   });
 
   items.forEach((item) => index.addDoc(item));

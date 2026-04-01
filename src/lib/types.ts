@@ -93,7 +93,7 @@ export interface ChartSeries {
 export interface ComplianceImpactScore {
   score: number;
   label: string;
-  drivers: string[];
+  drivers: Array<{ label: string; value: number; max: number }>;
   explanation: string;
 }
 
@@ -162,72 +162,74 @@ export interface CrossReferenceInsight {
   relevanceScore: number;
   rationale: string;
   matchedTerms: string[];
+  relatedItems: Array<{
+    id: string;
+    title: string;
+    sourceType: CrossReferenceRecord["sourceType"];
+    url: string;
+  }>;
   impact: string;
 }
 
 export interface SimilarityResult {
   id: string;
   label: string;
-  type: string;
+  type: "federal-register" | "congress" | "sec";
   score: number;
   summary: string;
   url: string;
 }
 
 export interface FetchJsonOptions extends RequestInit {
-  baseUrl?: string;
+  params?: Record<string, string | number | boolean | undefined>;
 }
 
 export interface NavigationLink {
   label: string;
   href: string;
-  description: string;
+  icon?: string;
 }
 
 export interface SearchResultItem {
   id: string;
-  source: "federal-register" | "congress" | "sec";
+  type: "federal-register" | "congress" | "sec";
   title: string;
   subtitle: string;
   summary: string;
   date: string;
   url: string;
-  agency?: string;
-  committee?: string;
-  issuer?: string;
-  topic?: string;
-  filingType?: string;
   tags: string[];
+  score?: number;
 }
 
 export interface SavedSearch {
   id: string;
   name: string;
   query: string;
-  filters: SearchParams;
+  filters: Record<string, string>;
   createdAt: string;
 }
 
 export interface DashboardSummaryStat {
   label: string;
   value: string;
-  delta: string;
-  tone: "positive" | "neutral" | "warning";
+  change: string;
+  trend: "up" | "down" | "flat";
+  delta?: string;
 }
 
 export interface DashboardVelocityPoint {
-  label: string;
-  value: number;
   date: string;
-  source: "federal-register" | "congress" | "sec";
+  federalRegister: number;
+  congress: number;
+  sec: number;
 }
 
 export interface DashboardDependencyNode {
   id: string;
-  type: "agency" | "committee" | "issuer" | "industry";
-  name: string;
-  count: number;
-  intensity: number;
+  label: string;
+  type: string;
+  weight: number;
 }
 
 export interface DashboardDependencyEdge {
@@ -251,15 +253,15 @@ export interface DashboardComplianceDriver {
 export interface DashboardComplianceSummary {
   score: number;
   label: string;
-  explanation: string;
   drivers: DashboardComplianceDriver[];
+  explanation: string;
 }
 
 export interface DashboardCrossReferenceHighlight {
   id: string;
+  title: string;
   sourceType: CrossReferenceRecord["sourceType"];
   sourceLabel: string;
-  targetType: CrossReferenceRecord["targetType"];
   targetLabel: string;
   relevanceScore: number;
   rationale: string;
@@ -268,6 +270,50 @@ export interface DashboardCrossReferenceHighlight {
 
 export interface DashboardWidgetResponse<T> {
   data: T;
-  _fallback?: boolean;
-  meta?: ApiResponseMeta;
+  updatedAt: string;
+}
+
+export interface EntityTimelineItem {
+  id: string;
+  sourceType: "federal-register" | "congress" | "sec";
+  title: string;
+  date: string;
+  summary: string;
+  url: string;
+  tags: string[];
+}
+
+export interface EntitySummary {
+  description: string;
+  keyFacts: string[];
+  affectedSectors: string[];
+  relatedCount: number;
+  lastUpdated: string;
+}
+
+export interface CompareItem {
+  id: string;
+  type: "federal-register" | "congress" | "sec";
+  title: string;
+  subtitle: string;
+  date: string;
+  summary: string;
+  topics: string[];
+  sectors: string[];
+  disclosureLanguage: string[];
+  url: string;
+}
+
+export interface CompareOverlap {
+  topics: string[];
+  dates: string[];
+  sectors: string[];
+  disclosureLanguage: string[];
+}
+
+export interface CompareResult {
+  items: CompareItem[];
+  overlap: CompareOverlap;
+  similarity: SimilarityResult[];
+  riskImplications: string[];
 }

@@ -1,3 +1,5 @@
+import { ComparePanel } from "@/components/compare/compare-panel";
+
 export default function ComparePage() {
-  return <div className="text-text-primary">Compare scaffold</div>;
+  return <ComparePanel />;
 }

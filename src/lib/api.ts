@@ -1,5 +1,6 @@
 import type {
   ApiResponse,
+  CompareResult,
   CongressBill,
   CongressBillDetail,
   CrossReferenceInsight,
@@ -8,6 +9,9 @@ import type {
   DashboardDependencyGraph,
   DashboardSummaryStat,
   DashboardVelocityPoint,
+  EntityRecord,
+  EntitySummary,
+  EntityTimelineItem,
   FederalRegisterDocument,
   FederalRegisterNotice,
   SecCompanyProfile,
@@ -17,66 +21,80 @@ import type {
 
 export async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, options);
-  if (!response.ok) {
-    throw new Error(`Request failed: ${response.status} ${response.statusText}`);
-  }
+  if (!response.ok) throw new Error(`Request failed: ${response.status} ${response.statusText}`);
   return (await response.json()) as T;
 }
 
 export async function fetchFederalRegisterNotices(query = ""): Promise<ApiResponse<FederalRegisterNotice[]>> {
-  return fetchJson<ApiResponse<FederalRegisterNotice[]>>(
-    `/api/federal-register/search?q=${encodeURIComponent(query)}`,
-  );
+  return fetchJson(`/api/federal-register/search?q=${encodeURIComponent(query)}`);
 }
 
 export async function fetchCongressBills(query = ""): Promise<ApiResponse<CongressBill[]>> {
-  return fetchJson<ApiResponse<CongressBill[]>>(`/api/congress/search?q=${encodeURIComponent(query)}`);
+  return fetchJson(`/api/congress/search?q=${encodeURIComponent(query)}`);
 }
 
 export async function fetchSecFilings(query = ""): Promise<ApiResponse<SecFiling[]>> {
-  return fetchJson<ApiResponse<SecFiling[]>>(`/api/sec/search?q=${encodeURIComponent(query)}`);
+  return fetchJson(`/api/sec/search?q=${encodeURIComponent(query)}`);
 }
 
 export async function fetchDashboardSummary(): Promise<ApiResponse<DashboardSummaryStat[]>> {
-  return fetchJson<ApiResponse<DashboardSummaryStat[]>>("/api/dashboard/summary");
+  return fetchJson("/api/dashboard/summary");
 }
 
 export async function fetchDashboardVelocity(): Promise<ApiResponse<DashboardVelocityPoint[]>> {
-  return fetchJson<ApiResponse<DashboardVelocityPoint[]>>("/api/dashboard/velocity");
+  return fetchJson("/api/dashboard/velocity");
 }
 
 export async function fetchDashboardDependencies(): Promise<ApiResponse<DashboardDependencyGraph>> {
-  return fetchJson<ApiResponse<DashboardDependencyGraph>>("/api/dashboard/dependencies");
+  return fetchJson("/api/dashboard/dependencies");
 }
 
 export async function fetchDashboardCompliance(): Promise<ApiResponse<DashboardComplianceSummary>> {
-  return fetchJson<ApiResponse<DashboardComplianceSummary>>("/api/dashboard/compliance");
+  return fetchJson("/api/dashboard/compliance");
 }
 
 export async function fetchDashboardCrossReferences(): Promise<ApiResponse<DashboardCrossReferenceHighlight[]>> {
-  return fetchJson<ApiResponse<DashboardCrossReferenceHighlight[]>>("/api/dashboard/cross-references");
+  return fetchJson("/api/dashboard/cross-references");
 }
 
 export async function fetchFederalRegisterDocument(documentNumber: string): Promise<ApiResponse<FederalRegisterDocument>> {
-  return fetchJson<ApiResponse<FederalRegisterDocument>>(`/api/federal-register/document/${encodeURIComponent(documentNumber)}`);
+  return fetchJson(`/api/federal-register/document/${encodeURIComponent(documentNumber)}`);
 }
 
 export async function fetchCongressBillDetail(billId: string): Promise<ApiResponse<CongressBillDetail>> {
-  return fetchJson<ApiResponse<CongressBillDetail>>(`/api/congress/bill/${encodeURIComponent(billId)}`);
+  return fetchJson(`/api/congress/bill/${encodeURIComponent(billId)}`);
 }
 
 export async function fetchSecCompanyProfile(cik: string): Promise<ApiResponse<SecCompanyProfile>> {
-  return fetchJson<ApiResponse<SecCompanyProfile>>(`/api/sec/company/${encodeURIComponent(cik)}`);
+  return fetchJson(`/api/sec/company/${encodeURIComponent(cik)}`);
 }
 
 export async function fetchCrossReferenceInsight(query = ""): Promise<ApiResponse<CrossReferenceInsight>> {
-  return fetchJson<ApiResponse<CrossReferenceInsight>>(`/api/insights/cross-reference?q=${encodeURIComponent(query)}`);
+  return fetchJson(`/api/insights/cross-reference?q=${encodeURIComponent(query)}`);
 }
 
 export async function fetchComplianceScore(query = ""): Promise<ApiResponse<DashboardComplianceSummary>> {
-  return fetchJson<ApiResponse<DashboardComplianceSummary>>(`/api/insights/compliance-score?q=${encodeURIComponent(query)}`);
+  return fetchJson(`/api/insights/compliance-score?q=${encodeURIComponent(query)}`);
 }
 
 export async function fetchSimilarity(query = ""): Promise<ApiResponse<SimilarityResult[]>> {
-  return fetchJson<ApiResponse<SimilarityResult[]>>(`/api/embeddings/similarity?q=${encodeURIComponent(query)}`);
+  return fetchJson(`/api/embeddings/similarity?q=${encodeURIComponent(query)}`);
+}
+
+export async function fetchEntitySummary(type: string, id: string): Promise<ApiResponse<EntitySummary>> {
+  return fetchJson(`/api/entities/${encodeURIComponent(type)}/${encodeURIComponent(id)}`);
+}
+
+export async function fetchEntityTimeline(type: string, id: string): Promise<ApiResponse<EntityTimelineItem[]>> {
+  return fetchJson(`/api/entities/${encodeURIComponent(type)}/${encodeURIComponent(id)}/timeline`);
+}
+
+export async function fetchCompareItems(ids: string[]): Promise<ApiResponse<CompareResult>> {
+  const params = new URLSearchParams();
+  ids.forEach((id) => params.append("id", id));
+  return fetchJson(`/api/compare?${params.toString()}`);
+}
+
+export async function fetchEntityRecord(type: string, id: string): Promise<ApiResponse<EntityRecord>> {
+  return fetchJson(`/api/entities/${encodeURIComponent(type)}/${encodeURIComponent(id)}/record`);
 }

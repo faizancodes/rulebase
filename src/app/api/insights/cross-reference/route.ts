@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 import type { CrossReferenceInsight } from "@/lib/types";
 
@@ -16,6 +15,7 @@ const SeedInsights: CrossReferenceInsight[] = [
     relevanceScore: 0.92,
     rationale: "Climate disclosure language aligns with issuer risk-factor updates.",
     matchedTerms: ["climate", "disclosure", "risk factors"],
+    relatedItems: [],
     impact: "High",
   },
   {
@@ -28,6 +28,7 @@ const SeedInsights: CrossReferenceInsight[] = [
     relevanceScore: 0.84,
     rationale: "Bill text references public-company reporting obligations in technology sectors.",
     matchedTerms: ["reporting", "public companies"],
+    relatedItems: [],
     impact: "Medium",
   },
   {
@@ -40,6 +41,7 @@ const SeedInsights: CrossReferenceInsight[] = [
     relevanceScore: 0.88,
     rationale: "8-K disclosure language mirrors federal incident reporting proposals.",
     matchedTerms: ["cybersecurity", "incident reporting"],
+    relatedItems: [],
     impact: "High",
   },
 ];
@@ -61,9 +63,7 @@ export async function GET(request: NextRequest) {
 
     const q = parsed.data.q.toLowerCase();
     const data = q
-      ? SeedInsights.filter((item) =>
-          [item.targetName, item.rationale, item.impact, ...item.matchedTerms].some((value) => value.toLowerCase().includes(q)),
-        )
+      ? SeedInsights.filter((item) => [item.targetName, item.rationale, item.impact, ...item.matchedTerms].some((value) => value.toLowerCase().includes(q)))
       : SeedInsights;
 
     return jsonOk(data, { source: "insights", query: parsed.data.q, total: data.length });

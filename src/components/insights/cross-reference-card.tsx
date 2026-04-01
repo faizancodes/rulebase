@@ -1,10 +1,10 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
-import { Badge } from "@/components/ui/badge";
 import type { DashboardCrossReferenceHighlight } from "@/lib/types";
 
 interface CrossReferenceCardProps {
