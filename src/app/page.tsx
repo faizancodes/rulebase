@@ -35,7 +35,7 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button asChild>
+              <Button>
                 <Link href="/dashboard">Explore dashboard</Link>
               </Button>
               <Link href="/search" className="inline-flex items-center justify-center rounded-md border border-border-default bg-surface-2 px-4 py-2 text-sm font-bold text-text-primary transition-colors hover:border-border-hover hover:bg-surface-3">

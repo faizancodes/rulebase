@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, type ChangeEvent } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -14,7 +14,7 @@ interface SearchFiltersProps {
 }
 
 export function SearchFilters({ filters, onChange, onReset }: SearchFiltersProps) {
-  const handleChange = useCallback((key: keyof SearchParams) => (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = useCallback((key: keyof SearchParams) => (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     onChange({ [key]: event.target.value });
   }, [onChange]);
 

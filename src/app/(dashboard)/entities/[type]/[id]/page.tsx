@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 
 import { CrossSourceTimeline } from "@/components/charts/cross-source-timeline";
-import { EntityHeader } from "@/components/entities/entity-header";
 import { EntityRelatedItems } from "@/components/entities/entity-related-items";
 import { EntitySummary } from "@/components/entities/entity-summary";
 import { fetchEntityRecord, fetchEntitySummary, fetchEntityTimeline } from "@/lib/api";
@@ -30,7 +29,11 @@ export default async function EntityPage({ params }: EntityPageProps) {
 
   return (
     <div className="space-y-6">
-      <EntityHeader entity={record} />
+      <div>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted">Entity detail</p>
+        <h1 className="mt-2 text-3xl font-light text-text-primary">{record.name ?? `${type} ${id}`}</h1>
+        <p className="mt-2 max-w-3xl text-sm text-text-secondary">{record.description ?? "Detailed entity intelligence and related activity."}</p>
+      </div>
       <EntitySummary summary={summary} />
       <CrossSourceTimeline items={timeline} velocity={[]} />
       <EntityRelatedItems items={timeline} />
