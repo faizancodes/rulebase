@@ -31,6 +31,11 @@ export default function DashboardPage() {
   const notices = Array.isArray(noticesQuery.data?.data) ? noticesQuery.data.data : [];
   const bills = Array.isArray(billsQuery.data?.data) ? billsQuery.data.data : [];
   const filings = Array.isArray(filingsQuery.data?.data) ? filingsQuery.data.data : [];
+  const summaryError = summaryQuery.error instanceof Error ? summaryQuery.error.message : null;
+  const velocityError = velocityQuery.error instanceof Error ? velocityQuery.error.message : null;
+  const dependencyError = dependencyQuery.error instanceof Error ? dependencyQuery.error.message : null;
+  const complianceError = complianceQuery.error instanceof Error ? complianceQuery.error.message : null;
+  const crossReferenceError = crossReferenceQuery.error instanceof Error ? crossReferenceQuery.error.message : null;
 
   const recentDate = useMemo(() => formatDate(new Date().toISOString()), []);
 

@@ -69,13 +69,13 @@ export default function SearchPage() {
         <Topbar />
         <main className="flex-1 p-4 sm:p-6 xl:p-8">
           <div className="space-y-6">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-text-muted">Search</p>
-          <h1 className="mt-2 text-3xl font-light text-text-primary">Regulatory search</h1>
-          <p className="mt-2 max-w-3xl text-sm text-text-secondary">Search Federal Register notices, congressional bills, and SEC filings from one place.</p>
-        </div>
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-text-muted">Search</p>
+              <h1 className="mt-2 text-3xl font-light text-text-primary">Regulatory search</h1>
+              <p className="mt-2 max-w-3xl text-sm text-text-secondary">Search Federal Register notices, congressional bills, and SEC filings from one place.</p>
+            </div>
 
-        <div className="grid gap-4 rounded border border-border-default bg-surface-2 p-4 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4 rounded border border-border-default bg-surface-2 p-4 md:grid-cols-2 xl:grid-cols-4">
           <input className="rounded border border-border-default bg-surface-1 px-3 py-2 text-sm" placeholder="Search terms" value={filters.q ?? ""} onChange={(e) => setFilters((current) => ({ ...current, q: e.target.value }))} />
           <input className="rounded border border-border-default bg-surface-1 px-3 py-2 text-sm" placeholder="Agency" value={filters.agency ?? ""} onChange={(e) => setFilters((current) => ({ ...current, agency: e.target.value }))} />
           <input className="rounded border border-border-default bg-surface-1 px-3 py-2 text-sm" placeholder="Committee" value={filters.committee ?? ""} onChange={(e) => setFilters((current) => ({ ...current, committee: e.target.value }))} />
