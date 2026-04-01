@@ -1,9 +1,7 @@
-import { SourceDiffView } from "@/components/compare/source-diff-view";
-import { fetchCompareItems } from "@/lib/api";
+"use client";
 
-export default async function ComparePage() {
-  const comparisonResponse = await fetchCompareItems([]);
-  const comparison = comparisonResponse.data;
+import { ComparePanel } from "@/components/compare/compare-panel";
 
-  return <SourceDiffView comparison={comparison} />;
+export default function ComparePage() {
+  return <ComparePanel />;
 }

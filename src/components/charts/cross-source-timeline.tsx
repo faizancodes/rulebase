@@ -3,8 +3,16 @@ import { ResponsiveContainer, Area, AreaChart, CartesianGrid, Tooltip, XAxis, YA
 import { Card } from "@/components/ui/card";
 import type { DashboardVelocityPoint, EntityTimelineItem } from "@/lib/types";
 
+interface TimelineEntry {
+  id: string;
+  date: string;
+  sourceType: string;
+  title: string;
+  summary: string;
+}
+
 interface CrossSourceTimelineProps {
-  items: EntityTimelineItem[];
+  items: EntityTimelineItem[] | TimelineEntry[];
   velocity: DashboardVelocityPoint[];
 }
 

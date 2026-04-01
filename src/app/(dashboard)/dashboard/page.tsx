@@ -89,13 +89,13 @@ export default function DashboardPage() {
           <Card>
             <div className="space-y-4">
               <h2 className="text-xl text-text-primary">Active bills</h2>
-              {bills.length > 0 ? bills.slice(0, 3).map((bill) => <div key={bill.billId} className="border-b border-border-subtle pb-3 last:border-0 last:pb-0"><p className="text-sm text-text-primary">{bill.title}</p><p className="text-xs text-text-muted">{bill.chamber} · {bill.status}</p></div>) : <EmptyState title="No bills" description="No congressional activity matched the current filters." />}
+              {bills.length > 0 ? bills.slice(0, 3).map((bill) => <div key={bill.billId} className="border-b border-border-subtle pb-3 last:border-0 last:pb-0"><p className="text-sm text-text-primary">{bill.title}</p><p className="text-xs text-text-muted">{bill.chamber} · {bill.latestAction ?? bill.status}</p></div>) : <EmptyState title="No bills" description="No congressional activity matched the current filters." />}
             </div>
           </Card>
           <Card>
             <div className="space-y-4">
               <h2 className="text-xl text-text-primary">Issuer filings</h2>
-              {filings.length > 0 ? filings.slice(0, 3).map((filing) => <div key={filing.accessionNumber} className="border-b border-border-subtle pb-3 last:border-0 last:pb-0"><p className="text-sm text-text-primary">{filing.companyName}</p><p className="text-xs text-text-muted">{filing.formType} · {filing.filedAt}</p></div>) : <EmptyState title="No filings" description="No SEC filings matched the current filters." />}
+              {filings.length > 0 ? filings.slice(0, 3).map((filing) => <div key={filing.accessionNumber} className="border-b border-border-subtle pb-3 last:border-0 last:pb-0"><p className="text-sm text-text-primary">{filing.companyName}</p><p className="text-xs text-text-muted">{filing.formType} · {filing.filingDate}</p></div>) : <EmptyState title="No filings" description="No SEC filings matched the current filters." />}
             </div>
           </Card>
         </div>

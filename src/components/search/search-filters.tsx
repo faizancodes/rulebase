@@ -20,6 +20,7 @@ export function SearchFilters({ filters, onChange, onReset }: SearchFiltersProps
 
   return (
     <div className="grid gap-4 rounded border border-border-default bg-surface-2 p-4 md:grid-cols-2 xl:grid-cols-4">
+      <Input placeholder="Search terms" value={filters.q ?? ""} onChange={handleChange("q")} />
       <Input placeholder="Agency" value={filters.agency ?? ""} onChange={handleChange("agency")} />
       <Input placeholder="Committee" value={filters.committee ?? ""} onChange={handleChange("committee")} />
       <Input placeholder="Issuer" value={filters.issuer ?? ""} onChange={handleChange("issuer")} />
